@@ -45,7 +45,11 @@ module NBayes
   class Data
     attr_accessor :data
     def initialize(options = {})
-      @data = Hash.new
+      if options[:data].is_a? Hash
+        @data = options[:data]
+      else
+        @data = Hash.new
+      end
       #@data = {
       #  "category1": {
       #    "tokens": Hash.new(0),
@@ -309,10 +313,9 @@ module NBayes
     # called internally after yaml import to reset Hash defaults
     def reset_after_import
       if data.is_a? Hash
-        data.each {|category| Data.new.cat_data(category)[:tokens].default = 0 }
-      else
-        data.reset_after_import
+        @data = Data.new(data: data)
       end
+      data.reset_after_import
     end
 
     def self.from_yml(yml_data)
