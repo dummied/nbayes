@@ -16,7 +16,7 @@ module NBayes
     attr_accessor :log_size, :tokens
 
     def initialize(options = {})
-      @tokens = Hash.new
+      @tokens = options[:tokens] || Hash.new
       # for smoothing, use log of vocab size, rather than vocab size
       @log_size = options[:log_size]
     end
@@ -314,6 +314,9 @@ module NBayes
     def reset_after_import
       if data.is_a? Hash
         @data = Data.new(data: data)
+      end
+      if vocab.is_a? Hash
+        @vocab = Vocab.new(tokens: vocab)
       end
       data.reset_after_import
     end
